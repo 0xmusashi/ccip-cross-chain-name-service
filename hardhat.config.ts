@@ -1,8 +1,7 @@
 import * as dotenvenc from "@chainlink/env-enc"
 dotenvenc.config();
 
-import { HardhatUserConfig, extendEnvironment } from "hardhat/config";
-import { createProvider } from "hardhat/internal/core/providers/construction";
+import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import './tasks';
 
@@ -24,15 +23,6 @@ declare module "hardhat/types/runtime" {
     changeNetwork: Function
   }
 }
-
-extendEnvironment(async (hre) => {
-  hre.changeNetwork = async function changeNetwork(newNetwork: string) {
-    hre.network.name = newNetwork;
-    hre.network.config = hre.config.networks[newNetwork];
-    hre.ethers.provider = new hre.ethers.providers.JsonRpcProvider(hre.network.config.url);
-    hre.network.provider = await createProvider(hre.config, newNetwork);
-  }
-})
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
